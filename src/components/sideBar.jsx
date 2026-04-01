@@ -46,7 +46,7 @@ function SideBarContent({ onNavigate }) {
       <div className="flex items-center gap-3">
         <img 
           className="w-10 h-10 rounded-xl object-cover bg-primary-container p-1" 
-          src="/src/styles/images/logo.jpg" 
+          src="/logo.jpg" 
           alt="Logo"
         />
         <div className="flex flex-col">
