@@ -47,7 +47,7 @@ export default function Login() {
         <div className="mb-10">
           <img 
             className="w-20 h-20 rounded-xl mx-auto mb-6 object-cover bg-primary-container p-2 shadow-sm" 
-            src="/src/styles/images/logo.jpg" 
+            src="/logo.jpg" 
             alt="Logo" 
           />
           <h2 className="text-3xl font-extrabold text-primary font-headline tracking-tight">Punto Chocolate</h2>
