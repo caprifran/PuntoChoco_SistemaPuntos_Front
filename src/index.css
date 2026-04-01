@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@source "../index.html";
+@source "./**/*.{js,ts,jsx,tsx}";
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    @apply font-body bg-background text-on-surface min-h-screen overflow-hidden;
+  }
+  
+  h1, h2, h3, .brand-font {
+    @apply font-headline;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+/* Custom scrollbar for better aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-outline-variant/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-outline-variant/50;
+}

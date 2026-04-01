@@ -1,0 +1,48 @@
+.accordion {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.accordion-item {
+  margin-bottom: 0.5rem;
+}
+
+.accordion-header {
+  background-color: transparent;
+  color: var(--md-sys-color-on-primary-container);
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-family: var(--font-display);
+  transition: background-color 0.2s ease;
+  border-radius: var(--radius-md);
+}
+
+.accordion-header:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.accordion-content div {
+  margin: 0.25rem 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: transparent;
+  color: var(--md-sys-color-on-primary-container);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.accordion-content div:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateX(4px);
+}

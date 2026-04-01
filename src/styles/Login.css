@@ -1,0 +1,74 @@
+#loginPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--md-sys-color-surface);
+  font-family: var(--font-body);
+}
+
+#loginCard {
+  background-color: var(--md-sys-color-surface-container-low);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 40px rgba(30, 27, 23, 0.08); /* Ambient Shadow */
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+#loginHeader {
+  margin-bottom: 2.5rem;
+}
+
+#loginHeader .loginLogo {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#loginHeader h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  color: var(--md-sys-color-primary);
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+#loginHeader p {
+  margin: 0.5rem 0 0;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+#loginCard form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+#loginCard button[type="submit"] {
+  /* Inherits from global button styles in index.css but specialized for login */
+  margin-top: 1rem;
+  font-size: 1rem;
+  padding: 1rem;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+#loginCard button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 20px rgba(54, 31, 26, 0.2);
+}
+
+#loginCard .spinner {
+  /* Inherits from global spinner */
+  margin: 0 auto;
+}

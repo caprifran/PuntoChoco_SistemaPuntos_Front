@@ -1,0 +1,44 @@
+#menuPrincipal {
+    flex-direction: row;
+}
+#menuPrincipal .tablaTop {
+    justify-items: center
+}
+#menuPrincipal .topList{
+    width: 50%;
+}
+
+#menuPrincipal table{
+    width: 80%;
+    border-collapse: collapse;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #c39f8f;
+    place-items: center;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+#menuPrincipal th:nth-child(1){
+  width: 30%;
+}
+#menuPrincipal th:nth-child(2){
+  width: 70%;
+}
+
+#menuPrincipal th, #menuPrincipal td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+#menuPrincipal tbody tr{
+  background-color: #a87f70;
+  transition: filter 0.15s ease;
+}
+
+#menuPrincipal tbody tr:hover {
+  filter: brightness(1.3);
+}

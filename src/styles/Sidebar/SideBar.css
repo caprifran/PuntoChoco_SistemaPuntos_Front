@@ -1,0 +1,53 @@
+.sideBarContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    color: var(--md-sys-color-on-primary-container);
+}
+
+.sideBarContainer .titleContainer {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0.5rem;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.sideBarContainer .titleContainer .icono {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+}
+
+.sideBarContainer .titleContainer .title {
+    color: var(--md-sys-color-on-primary-container);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    text-align: left;
+}
+
+.sideBarContainer .btnLogout {
+    margin-top: auto;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--md-sys-color-tertiary);
+    color: var(--md-sys-color-on-tertiary);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sideBarContainer .btnLogout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.1);
+}

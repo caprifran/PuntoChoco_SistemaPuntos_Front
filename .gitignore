@@ -1,0 +1,41 @@
+# Dependencias
+node_modules/
+
+# Build de producción
+dist/
+build/
+
+# Variables de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Caché de Vite
+.vite/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Cobertura de tests
+coverage/
+
+# Archivos temporales
+*.tmp
+*.temp
