@@ -11,9 +11,9 @@ if (hostname === "localhost") {
 else if (/^192\.168\./.test(hostname) || /^10\./.test(hostname)) {
     baseURL = `http://${hostname}:4000/api/`;
 }
-// fallback cuando va por nginx en prod
+// producción (Vercel → Render)
 else {
-    baseURL = "/api/";
+    baseURL = "https://puntochoco-sistemapuntos-back.onrender.com/api/";
 }
 
 const api = axios.create({
