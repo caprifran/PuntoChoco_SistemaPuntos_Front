@@ -103,11 +103,11 @@ export default function HistoricoPuntos() {
         },
         ...(!id ? [{
           header: "Cliente",
-          accessorKey: "clienteNombre",
-          cell: ({ row }) => (
+          accessorKey: "clienteCompleto",
+          cell: ({ getValue, row }) => (
             <div className="flex flex-col">
-              <span className="font-bold text-sm text-primary">{row.original.clienteNombre}</span>
-              <span className="text-[10px] text-outline uppercase">{row.original.clienteDni}</span>
+              <span className="font-bold text-sm text-primary">{getValue()}</span>
+              <span className="text-[10px] text-outline uppercase">{row.original.dni}</span>
             </div>
           ),
         }] : []),
