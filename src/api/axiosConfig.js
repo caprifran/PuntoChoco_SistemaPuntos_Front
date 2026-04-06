@@ -1,23 +1,7 @@
 import axios from "axios";
 
-const hostname = window.location.hostname;
-
-let baseURL;
-
-if (hostname === "localhost") {
-    baseURL = "http://localhost:4000/api/";
-}
-// si es una IP local del estilo 192.168.x.x
-else if (/^192\.168\./.test(hostname) || /^10\./.test(hostname)) {
-    baseURL = `http://${hostname}:4000/api/`;
-}
-// producción (Vercel → Render)
-else {
-    baseURL = "https://puntochoco-sistemapuntos-back-dev.onrender.com/api/";
-}
-
 const api = axios.create({
-  baseURL,
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 api.interceptors.request.use((config) => {
