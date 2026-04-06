@@ -13,7 +13,7 @@ else if (/^192\.168\./.test(hostname) || /^10\./.test(hostname)) {
 }
 // producción (Vercel → Render)
 else {
-    baseURL = "https://puntochoco-sistemapuntos-back.onrender.com/api/";
+    baseURL = "https://puntochoco-sistemapuntos-back-dev.onrender.com/api/";
 }
 
 const api = axios.create({
