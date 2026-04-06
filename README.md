@@ -42,13 +42,15 @@ npm install
 
 ## Variables de entorno
 
-Crear un archivo `.env` en la raíz del frontend (opcional):
+Crear un archivo `.env` en la raíz del frontend:
 
 ```env
+VITE_API_URL=http://localhost:4000/api/
 VITE_WS_URL=ws://localhost:4000
 ```
 
-Si no se define, se usa `ws://localhost:4000` por defecto. La URL de la API se resuelve automáticamente según el hostname (localhost, IP local o producción vía nginx).
+- `VITE_API_URL` — **Requerida.** URL base de la API REST.
+- `VITE_WS_URL` — Opcional. Si no se define, se usa `ws://localhost:4000` por defecto.
 
 ## Ejecución
 
