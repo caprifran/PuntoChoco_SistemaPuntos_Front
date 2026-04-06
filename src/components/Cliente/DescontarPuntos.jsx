@@ -26,12 +26,17 @@ export default function DescontarPuntos({ idCliente, idProducto, onPuntosDescont
     if (result.isConfirmed) {
       setLoading(true);
       try {
-        await axios.put(`clientes/${idCliente}/descontarPuntos`, {
+        const response = await axios.put(`clientes/${idCliente}/descontarPuntos`, {
           idProducto: Number(idProducto),
           cantProd: Number(cantProd)
         });
-        toast.success("Canje realizado correctamente");
-        setCantProd("");
+        
+        if (response.data.code === -1) {
+          toast.error(response.data.msj);
+        } else {
+          toast.success("Canje realizado correctamente");
+          setCantProd("");
+        }
       } catch (err) {
         toast.error("Error al descontar puntos");
       } finally {
