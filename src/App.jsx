@@ -107,7 +107,7 @@ export default function App() {
               <ProtectedRoute>
                 <div className="flex h-screen overflow-hidden bg-background">
                   <SideBar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-                  <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+                  <div className="flex-1 flex flex-col min-w-0 overflow-y-auto" style={{ scrollbarGutter: "stable" }}>
                     <header className="sticky top-0 z-10 flex justify-between items-center w-full px-4 md:px-8 py-3 md:py-4 bg-background transition-colors">
                       <div className="flex items-center gap-3">
                         <button 
