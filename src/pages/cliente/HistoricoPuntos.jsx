@@ -1,17 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../../api/axiosConfig";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import ClipLoader from "react-spinners/ClipLoader";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  flexRender,
-} from "@tanstack/react-table";
+import HistoricoList from "../../components/Cliente/HistoricoList";
 
 export default function HistoricoPuntos() {
   const { id } = useParams();
@@ -24,6 +18,8 @@ export default function HistoricoPuntos() {
   // Filter States
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [tipoAccion, setTipoAccion] = useState("");
+  const [clienteSearch, setClienteSearch] = useState("");
 
   const today = new Date();
   today.setHours(23, 59, 59, 999);
@@ -57,6 +53,8 @@ export default function HistoricoPuntos() {
       if (id) params.clienteId = id;
       if (startDate) params.fDesde = format(startDate, "yyyy-MM-dd");
       if (endDate) params.fHasta = format(endDate, "yyyy-MM-dd");
+      if (tipoAccion) params.tipo = tipoAccion;
+      if (!id && clienteSearch.trim()) params.clienteDesc = clienteSearch.trim();
 
       const { data } = await api.get("clientes/historico", { params });
       setHistorico(data);
@@ -75,90 +73,13 @@ export default function HistoricoPuntos() {
   const handleClear = () => {
     setStartDate(null);
     setEndDate(null);
+    setTipoAccion("");
+    setClienteSearch("");
     setHistorico([]);
     setHasSearched(false);
     setDateError(null);
     setError(null);
   };
-
-  const columns = useMemo(
-    () => {
-      const cols = [
-        {
-          header: "Fecha",
-          accessorKey: "fecha",
-          cell: ({ getValue }) => {
-            const date = new Date(getValue());
-            return (
-              <>
-                <span className="text-xs font-medium text-on-surface whitespace-nowrap sm:hidden">
-                  {format(date, "dd MMM yy, HH:mm", { locale: es })}
-                </span>
-                <span className="text-sm font-medium text-on-surface whitespace-nowrap hidden sm:inline">
-                  {format(date, "dd MMM yyyy, HH:mm", { locale: es })}
-                </span>
-              </>
-            );
-          },
-        },
-        ...(!id ? [{
-          header: "Cliente",
-          accessorKey: "clienteCompleto",
-          cell: ({ getValue, row }) => (
-            <div className="flex flex-col">
-              <span className="font-bold text-sm text-primary">{getValue()}</span>
-              <span className="text-[10px] text-outline uppercase">{row.original.dni}</span>
-            </div>
-          ),
-        }] : []),
-        {
-          header: "Acción",
-          accessorKey: "tipo",
-          cell: ({ getValue }) => {
-            const type = getValue();
-            const isSuma = type?.toLowerCase() === "suma" || type?.toLowerCase() === "alta";
-            return (
-              <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-tighter ${isSuma ? "bg-primary-fixed text-on-primary-fixed" : "bg-tertiary-fixed text-on-tertiary-fixed"}`}>
-                {type}
-              </span>
-            );
-          },
-        },
-        {
-          header: "Puntos",
-          accessorKey: "puntos",
-          cell: ({ getValue, row }) => {
-            const points = Math.abs(getValue());
-            const tipo = row.original.tipo?.toLowerCase();
-            const isNegative = tipo === "resta" || tipo === "consumo";
-            return (
-              <div className="text-right">
-                  <span className={`font-black text-sm ${isNegative ? "text-error" : "text-primary"}`}>
-                      {isNegative ? "-" : "+"}{points}
-                  </span>
-              </div>
-            );
-          },
-        },
-      ];
-      return cols;
-    },
-    [id]
-  );
-
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
-  const table = useReactTable({
-    data: historico,
-    columns,
-    state: { pagination },
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -168,7 +89,7 @@ export default function HistoricoPuntos() {
             <span className="material-symbols-outlined">history</span>
           </div>
           <div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-primary font-headline tracking-tight">Histórico de Movimientos</h2>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-primary font-headline tracking-tight">Histórico {id ? "" : "General"} de Movimientos</h2>
             <p className="text-on-surface-variant font-medium text-sm">Consulta y filtra el registro de transacciones.</p>
           </div>
         </div>
@@ -187,7 +108,7 @@ export default function HistoricoPuntos() {
                 dateFormat="dd/MM/yyyy"
                 locale={es}
                 maxDate={endDate || today}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30"
+                className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
                 />
                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">calendar_month</span>
             </div>
@@ -203,11 +124,43 @@ export default function HistoricoPuntos() {
                 dateFormat="dd/MM/yyyy"
                 locale={es}
                 minDate={startDate || undefined}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30"
+                className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
                 />
                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">calendar_month</span>
             </div>
           </div>
+
+          <div className="flex-1 w-full space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Tipo de Acción</label>
+            <div className="relative">
+                <select
+                  value={tipoAccion}
+                  onChange={(e) => setTipoAccion(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold appearance-none cursor-pointer"
+                >
+                  <option value="">Todas</option>
+                  <option value="ALTA">Alta</option>
+                  <option value="CONSUMO">Consumo</option>
+                </select>
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">expand_more</span>
+            </div>
+          </div>
+
+          {!id && (
+            <div className="flex-1 w-full space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Cliente</label>
+              <div className="relative">
+                  <input
+                    type="text"
+                    value={clienteSearch}
+                    onChange={(e) => setClienteSearch(e.target.value)}
+                    placeholder="Nombre o apellido"
+                    className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
+                  />
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">person_search</span>
+              </div>
+            </div>
+          )}
 
           <div className="flex items-center gap-3 w-full md:w-auto">
             <button 
@@ -221,7 +174,7 @@ export default function HistoricoPuntos() {
             <button 
                 type="button"
                 onClick={handleClear}
-                disabled={loading || (!startDate && !endDate)}
+                disabled={loading || (!startDate && !endDate && !tipoAccion && !clienteSearch)}
                 className="p-3.5 text-on-surface-variant hover:bg-surface-container-highest rounded-xl transition-colors flex items-center justify-center"
                 title="Limpiar filtros"
             >
@@ -244,86 +197,7 @@ export default function HistoricoPuntos() {
         </div>
       )}
 
-      <div className="bg-surface-container-low p-1 rounded-3xl border border-outline-variant/30 shadow-sm overflow-hidden">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4 opacity-40">
-            <ClipLoader size={40} color="var(--md-sys-color-primary)" />
-            <p className="font-bold animate-pulse font-headline">Actualizando registros...</p>
-          </div>
-        ) : !hasSearched ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="w-20 h-20 rounded-full bg-primary-container/30 flex items-center justify-center mb-4 text-primary">
-                <span className="material-symbols-outlined text-4xl">calendar_view_day</span>
-            </div>
-            <p className="text-xl font-bold text-primary font-headline">Consulta de Historial</p>
-            <p className="text-sm text-on-surface-variant mt-1">Selecciona un rango de fechas para visualizar los movimientos.</p>
-          </div>
-        ) : historico.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 text-outline">
-                <span className="material-symbols-outlined text-4xl">history_toggle_off</span>
-            </div>
-            <p className="text-xl font-bold text-primary font-headline">No se encontraron movimientos</p>
-            <p className="text-sm text-on-surface-variant mt-1">Ajusta los filtros para ver otros resultados.</p>
-          </div>
-        ) : (
-          <div className="bg-surface-container-lowest">
-            <table className="w-full text-left">
-              <thead>
-                {table.getHeaderGroups().map((hg) => (
-                  <tr key={hg.id} className="bg-surface-container-low">
-                    {hg.headers.map((h, index) => (
-                      <th key={h.id} className={`px-3 md:px-6 py-3 md:py-4 text-[11px] font-black uppercase tracking-widest text-on-surface-variant ${index === hg.headers.length - 1 ? "text-right" : ""}`}>
-                        {flexRender(h.column.columnDef.header, h.getContext())}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody className="divide-y divide-surface-container-low">
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="hover:bg-surface-container-low/50 transition-colors">
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-3 md:px-6 py-4 md:py-5">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            
-            {/* Pagination Controls */}
-            <div className="px-4 md:px-6 py-4 bg-surface-container-low border-t border-outline-variant/20 flex flex-col sm:flex-row items-center justify-between gap-3">
-               <div className="flex items-center gap-2">
-                    <button 
-                        onClick={() => table.previousPage()} 
-                        disabled={!table.getCanPreviousPage()}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest text-primary disabled:opacity-30 hover:brightness-95 transition-all shadow-sm"
-                    >
-                        <span className="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <div className="px-4 text-xs font-bold text-on-surface-variant flex items-center gap-1">
-                        <span>Página</span>
-                        <span className="text-primary">{table.getState().pagination.pageIndex + 1}</span>
-                        <span>de</span>
-                        <span>{table.getPageCount()}</span>
-                    </div>
-                    <button 
-                        onClick={() => table.nextPage()} 
-                        disabled={!table.getCanNextPage()}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest text-primary disabled:opacity-30 hover:brightness-95 transition-all shadow-sm"
-                    >
-                        <span className="material-symbols-outlined">chevron_right</span>
-                    </button>
-               </div>
-               <div className="text-[10px] uppercase tracking-widest font-black text-outline">
-                    {historico.length} Movimientos encontrados
-               </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <HistoricoList data={historico} clienteId={id} loading={loading} hasSearched={hasSearched} onDataChange={fetchHistorico} />
 
       <div className="flex justify-center pt-4 pb-8">
         <Link 
