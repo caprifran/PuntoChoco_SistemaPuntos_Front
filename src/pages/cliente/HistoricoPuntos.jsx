@@ -20,6 +20,7 @@ export default function HistoricoPuntos() {
   const [endDate, setEndDate] = useState(null);
   const [tipoAccion, setTipoAccion] = useState("");
   const [clienteSearch, setClienteSearch] = useState("");
+  const [nroFactura, setNroFactura] = useState("");
 
   const today = new Date();
   today.setHours(23, 59, 59, 999);
@@ -55,6 +56,7 @@ export default function HistoricoPuntos() {
       if (endDate) params.fHasta = format(endDate, "yyyy-MM-dd");
       if (tipoAccion) params.tipo = tipoAccion;
       if (!id && clienteSearch.trim()) params.clienteDesc = clienteSearch.trim();
+      if (nroFactura.trim()) params.nroFactura = nroFactura.trim();
 
       const { data } = await api.get("clientes/historico", { params });
       setHistorico(data);
@@ -75,6 +77,7 @@ export default function HistoricoPuntos() {
     setEndDate(null);
     setTipoAccion("");
     setClienteSearch("");
+    setNroFactura("");
     setHistorico([]);
     setHasSearched(false);
     setDateError(null);
@@ -97,89 +100,109 @@ export default function HistoricoPuntos() {
 
       {/* Filter Section */}
       <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/30 shadow-sm">
-        <form onSubmit={handleFilter} className="flex flex-col md:flex-row items-end gap-6">
-          <div className="flex-1 w-full space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Fecha Desde</label>
-            <div className="relative">
-                <DatePicker
-                selected={startDate}
-                onChange={(date) => { setStartDate(date); setDateError(null); }}
-                placeholderText="dd/mm/aaaa"
-                dateFormat="dd/MM/yyyy"
-                locale={es}
-                maxDate={endDate || today}
-                className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
-                />
-                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">calendar_month</span>
-            </div>
-          </div>
-
-          <div className="flex-1 w-full space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Fecha Hasta</label>
-            <div className="relative">
-                <DatePicker
-                selected={endDate}
-                onChange={(date) => { setEndDate(date); setDateError(null); }}
-                placeholderText="dd/mm/aaaa"
-                dateFormat="dd/MM/yyyy"
-                locale={es}
-                minDate={startDate || undefined}
-                className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
-                />
-                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">calendar_month</span>
-            </div>
-          </div>
-
-          <div className="flex-1 w-full space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Tipo de Acción</label>
-            <div className="relative">
-                <select
-                  value={tipoAccion}
-                  onChange={(e) => setTipoAccion(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold appearance-none cursor-pointer"
-                >
-                  <option value="">Todas</option>
-                  <option value="ALTA">Alta</option>
-                  <option value="CONSUMO">Consumo</option>
-                </select>
-                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">expand_more</span>
-            </div>
-          </div>
-
-          {!id && (
+        <form onSubmit={handleFilter} className="flex flex-col gap-6">
+          {/* Fila superior: Fecha Desde, Fecha Hasta, Tipo de Acción */}
+          <div className="flex flex-col md:flex-row items-end gap-6">
             <div className="flex-1 w-full space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Cliente</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Fecha Desde</label>
+              <div className="relative">
+                  <DatePicker
+                  selected={startDate}
+                  onChange={(date) => { setStartDate(date); setDateError(null); }}
+                  placeholderText="dd/mm/aaaa"
+                  dateFormat="dd/MM/yyyy"
+                  locale={es}
+                  maxDate={endDate || today}
+                  className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
+                  />
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">calendar_month</span>
+              </div>
+            </div>
+
+            <div className="flex-1 w-full space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Fecha Hasta</label>
+              <div className="relative">
+                  <DatePicker
+                  selected={endDate}
+                  onChange={(date) => { setEndDate(date); setDateError(null); }}
+                  placeholderText="dd/mm/aaaa"
+                  dateFormat="dd/MM/yyyy"
+                  locale={es}
+                  minDate={startDate || undefined}
+                  className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
+                  />
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">calendar_month</span>
+              </div>
+            </div>
+
+            <div className="flex-1 w-full space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Tipo de Acción</label>
+              <div className="relative">
+                  <select
+                    value={tipoAccion}
+                    onChange={(e) => setTipoAccion(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold appearance-none cursor-pointer"
+                  >
+                    <option value="">Todas</option>
+                    <option value="ALTA">Alta</option>
+                    <option value="CONSUMO">Consumo</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">expand_more</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Fila inferior: Cliente, Nro. Factura, Botones */}
+          <div className="flex flex-col md:flex-row items-end gap-6">
+            {!id && (
+              <div className="flex-1 w-full space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Cliente</label>
+                <div className="relative">
+                    <input
+                      type="text"
+                      value={clienteSearch}
+                      onChange={(e) => setClienteSearch(e.target.value)}
+                      placeholder="Nombre o apellido"
+                      className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
+                    />
+                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">person_search</span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex-1 w-full space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Nro. Factura</label>
               <div className="relative">
                   <input
                     type="text"
-                    value={clienteSearch}
-                    onChange={(e) => setClienteSearch(e.target.value)}
-                    placeholder="Nombre o apellido"
+                    value={nroFactura}
+                    onChange={(e) => setNroFactura(e.target.value)}
+                    placeholder="Número de factura"
                     className="w-full px-4 pr-12 py-3 rounded-xl bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 overflow-hidden text-ellipsis"
                   />
-                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">person_search</span>
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">receipt</span>
               </div>
             </div>
-          )}
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <button 
-                type="submit"
-                disabled={loading}
-                className="flex-1 md:flex-none px-8 py-3.5 bg-primary text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2"
-            >
-                <span className="material-symbols-outlined text-sm">filter_list</span>
-                Filtrar
-            </button>
-            <button 
-                type="button"
-                onClick={handleClear}
-                disabled={loading || (!startDate && !endDate && !tipoAccion && !clienteSearch)}
-                className="p-3.5 text-on-surface-variant hover:bg-surface-container-highest rounded-xl transition-colors flex items-center justify-center"
-                title="Limpiar filtros"
-            >
-                <span className="material-symbols-outlined">restart_alt</span>
-            </button>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <button 
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 md:flex-none px-8 py-3.5 bg-primary text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2"
+              >
+                  <span className="material-symbols-outlined text-sm">filter_list</span>
+                  Filtrar
+              </button>
+              <button 
+                  type="button"
+                  onClick={handleClear}
+                  disabled={loading || (!startDate && !endDate && !tipoAccion && !clienteSearch && !nroFactura)}
+                  className="p-3.5 text-on-surface-variant hover:bg-surface-container-highest rounded-xl transition-colors flex items-center justify-center"
+                  title="Limpiar filtros"
+              >
+                  <span className="material-symbols-outlined">restart_alt</span>
+              </button>
+            </div>
           </div>
         </form>
         {dateError && (
