@@ -223,8 +223,8 @@ export default function HistoricoList({ data, clienteId, loading, hasSearched, o
                 </tr>
               ))}
             </thead>
-            <tbody className="divide-y divide-surface-container-low">
-              {table.getRowModel().rows.map((row) => {
+            <tbody>
+              {table.getRowModel().rows.map((row, rowIndex) => {
                 const isExpanded = expandedRowId === row.id;
                 const colCount = row.getVisibleCells().length;
                 const tipo = row.original.tipo?.toLowerCase();
@@ -233,7 +233,7 @@ export default function HistoricoList({ data, clienteId, loading, hasSearched, o
                   <Fragment key={row.id}>
                     <tr
                       onClick={() => setExpandedRowId(isExpanded ? null : row.id)}
-                      className="hover:bg-surface-container-low/50 transition-colors cursor-pointer select-none"
+                      className={`hover:bg-surface-container-low/50 transition-colors cursor-pointer select-none ${rowIndex > 0 ? "border-t border-surface-container-low" : ""}`}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <td key={cell.id} className={`px-3 md:px-6 py-4 md:py-5 text-center ${cell.column.columnDef.meta?.align === "right" ? "md:text-right" : "md:text-left"}`}>
