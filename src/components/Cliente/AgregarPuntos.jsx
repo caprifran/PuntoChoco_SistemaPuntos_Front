@@ -8,6 +8,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 export default function AgregarPuntos({ clienteId, onPuntosAgregados, isLoading }) {
   const [puntos, setPuntos] = useState("");
+  const [nroFactura, setNroFactura] = useState("");
   const [loading, setLoading] = useState(false);
   const MySwal = withReactContent(Swal);
 
@@ -27,10 +28,12 @@ export default function AgregarPuntos({ clienteId, onPuntosAgregados, isLoading 
       setLoading(true);
       try {
         await axios.put(`clientes/${clienteId}/agregarPuntos`, {
-          puntos: Number(puntos)
+          puntos: Number(puntos),
+          nroFactura: nroFactura.trim() || null
         });
         toast.success("Puntos agregados correctamente");
         setPuntos("");
+        setNroFactura("");
       } catch (err) {
         toast.error(err.response?.data?.error || "Error al agregar puntos");
       } finally {
@@ -47,7 +50,7 @@ export default function AgregarPuntos({ clienteId, onPuntosAgregados, isLoading 
 
   return (
     <div className="bg-surface-container-highest/20 p-6 rounded-2xl border border-outline-variant/10">
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-end gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex-1 space-y-2 w-full">
           <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Puntos a Sumar</label>
           <div className="relative">
@@ -64,11 +67,26 @@ export default function AgregarPuntos({ clienteId, onPuntosAgregados, isLoading 
             <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-outline uppercase">Pts</div>
           </div>
         </div>
+
+        <div className="flex-1 space-y-2 w-full">
+          <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-1">Nro. Factura</label>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Número de factura (opcional)"
+              value={nroFactura}
+              onChange={(e) => setNroFactura(e.target.value)}
+              disabled={loading || isLoading}
+              className="w-full px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-bold placeholder-on-surface-variant/30 pr-12"
+            />
+            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm">receipt</span>
+          </div>
+        </div>
         
         <button 
           type="submit" 
           disabled={loading || isLoading || !puntos} 
-          className="w-full sm:w-auto px-8 py-3.5 bg-primary text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full px-8 py-3.5 bg-primary text-on-primary rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {loading ? (
             <ClipLoader size={18} color="white" />
