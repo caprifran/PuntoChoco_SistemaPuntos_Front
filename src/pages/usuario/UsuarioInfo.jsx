@@ -100,7 +100,7 @@ export default function UsuarioInfo() {
           <h2 className="text-2xl sm:text-4xl font-extrabold text-primary font-headline tracking-tight">{usuario.nombre} {usuario.apellido}</h2>
           <div className="flex items-center justify-center sm:justify-start gap-3 mt-2">
             <span className="px-3 py-1 bg-tertiary-container text-on-tertiary-container rounded-full font-black text-[10px] uppercase tracking-widest">
-              {usuario.rol || "Sin Rol"}
+              {usuario.rol}
             </span>
             <div className="flex items-center gap-1.5 px-3 py-1 bg-surface-container-highest rounded-full">
                 <div className={`w-1.5 h-1.5 rounded-full ${usuario.activo ? 'bg-green-500' : 'bg-outline'}`}></div>

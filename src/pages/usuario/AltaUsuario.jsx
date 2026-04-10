@@ -9,11 +9,8 @@ export default function CrearUsuario() {
   const [form, setForm] = useState({
     username: "",
     password: "",
-    confirmPassword: "",
     nombre: "",
     apellido: "",
-    email: "",
-    rol: "SELLER",
   });
   const [redirect, setRedirect] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,30 +29,12 @@ export default function CrearUsuario() {
     });
   };
 
-  const validate = () => {
-    if (form.password !== form.confirmPassword) {
-      toast.error("Las contraseñas no coinciden");
-      return false;
-    }
-    if (form.password.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
-      return false;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      toast.error("El formato del email no es válido");
-      return false;
-    }
-    return true;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
-    
     setLoading(true);
+
     try {
-      await axios.post("usuarios", form);
+      await axios.post("auth/register", form);
       toast.success("Usuario creado correctamente");
       setRedirect(true);
     } catch (err) {
@@ -65,17 +44,17 @@ export default function CrearUsuario() {
     }
   };
 
-  if (redirect) return <Navigate to={`/usuarios/buscador-usuarios`} replace />;
+  if (redirect) return <Navigate to={`/`} replace />;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm">
           <span className="material-symbols-outlined">person_add</span>
         </div>
         <div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-primary font-headline tracking-tight">Nuevo Usuario</h2>
-          <p className="text-on-surface-variant font-medium text-sm">Registra un nuevo usuario en el sistema y Keycloak.</p>
+          <p className="text-on-surface-variant font-medium text-sm">Registra un nuevo usuario operador o administrador.</p>
         </div>
       </div>
 
@@ -95,12 +74,12 @@ export default function CrearUsuario() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Email</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Contraseña</label>
               <input
-                type="email"
-                name="email"
-                placeholder="juan@ejemplo.com"
-                value={form.email}
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                value={form.password}
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 rounded-lg bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-body"
@@ -108,8 +87,8 @@ export default function CrearUsuario() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Nombre</label>
                 <input
                   type="text"
@@ -133,52 +112,13 @@ export default function CrearUsuario() {
                   className="w-full px-4 py-3 rounded-lg bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-body"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Rol</label>
-                <select
-                  name="rol"
-                  value={form.rol}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-body font-bold"
-                >
-                  <option value="SELLER">Empleado (SELLER)</option>
-                  <option value="ADMIN">Administrador (ADMIN)</option>
-                </select>
-              </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-outline-variant/30 pt-6">
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Contraseña</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                value={form.password}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 rounded-lg bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-body"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Confirmar Contraseña</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="••••••••"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 rounded-lg bg-surface-container-highest text-on-surface border-none focus:ring-2 focus:ring-primary/20 transition-all font-body"
-              />
-            </div>
           </div>
         </form>
       </div>
 
       <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-4">
         <Link 
-          to="/usuarios/buscador-usuarios" 
+          to="/" 
           className="flex items-center gap-2 text-on-surface-variant font-bold hover:text-primary transition-colors py-3 px-6"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
