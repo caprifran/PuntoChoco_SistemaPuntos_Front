@@ -33,9 +33,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { authenticated, loading } = useAuth();
   if (loading) return null;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!authenticated) return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -43,7 +43,7 @@ function HeaderProfile() {
   const { user } = useAuth();
   if (!user) return null;
   const initials = `${user.nombre?.charAt(0).toUpperCase() ?? ""}${user.apellido?.charAt(0).toUpperCase() ?? ""}`;
-  const rolLabel = user.rol === "ADMIN" ? "Administrador" : "Empleado";
+  const rolLabel = user.rol === "ADMIN" ? "Administrador" : (user.rol === "SELLER" ? "Empleado" : "Cliente");
   return (
     <div className="flex items-center gap-3 pl-2 border-l border-outline-variant/30">
       <div className="text-right hidden sm:block">
@@ -110,7 +110,7 @@ export default function App() {
                   <div className="flex-1 flex flex-col min-w-0 overflow-y-auto" style={{ scrollbarGutter: "stable" }}>
                     <header className="sticky top-0 z-10 flex justify-between items-center w-full px-4 md:px-8 py-3 md:py-4 bg-background transition-colors">
                       <div className="flex items-center gap-3">
-                        <button 
+                        <button
                           onClick={() => setSidebarOpen(true)}
                           className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl hover:bg-surface-container-high transition-colors"
                         >

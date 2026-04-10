@@ -12,6 +12,7 @@
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.13.2",
     "date-fns": "^4.1.0",
+    "keycloak-js": "^26.2.3",
     "react": "^18.0.0",
     "react-datepicker": "^8.10.0",
     "react-dom": "^18.0.0",
